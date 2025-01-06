@@ -1,0 +1,67 @@
+class TreeNode:
+    def __init__(self, data):
+        self.data = data  # The value the node holds (e.g., restaurant name, menu category, or item)
+        self.children = []  # List to store child nodes
+
+    def add_child(self, child_node):
+        self.children.append(child_node)
+        print(f"Added {child_node.data} under {self.data}.")
+
+    def display(self, level=0):
+        # Print the node data, with indentation to represent tree level
+        print("  " * level + f"- {self.data}")
+        for child in self.children:
+            child.display(level + 1)
+
+class FoodDeliverySystem:
+    def __init__(self):
+        self.root = None
+
+    def create_restaurant(self, restaurant_name):
+        # Create a root node for the restaurant
+        self.root = TreeNode(restaurant_name)
+        print(f"Restaurant '{restaurant_name}' has been created.")
+
+    def add_menu_category(self, category_name):
+        # Create a category and add it as a child to the restaurant
+        category_node = TreeNode(category_name)
+        self.root.add_child(category_node)
+
+    def add_menu_item(self, category_name, item_name):
+        # Find the category node and add the item under it
+        for category in self.root.children:
+            if category.data == category_name:
+                item_node = TreeNode(item_name)
+                category.add_child(item_node)
+                return
+        print(f"Category '{category_name}' not found.")
+
+    def display_menu(self):
+        if self.root:
+            print(f"Menu for Restaurant '{self.root.data}':")
+            self.root.display()
+        else:
+            print("No restaurant data available.")
+
+# Example Usage
+food_system = FoodDeliverySystem()
+
+# Create a restaurant
+food_system.create_restaurant("Uncles restaurant")
+
+# Add menu categories (e.g., Appetizers, Main Courses)
+print("\n------------------")
+
+food_system.add_menu_category("Appetizers")
+food_system.add_menu_category("Main Courses")
+print("\n------------------")
+
+# Add menu items under categories
+food_system.add_menu_item("Appetizers", "Garlic Bread")
+food_system.add_menu_item("Appetizers", "Mozzarella Sticks")
+food_system.add_menu_item("Main Courses", "Margherita Pizza")
+food_system.add_menu_item("Main Courses", "Pepperoni Pizza")
+print("\n------------------")
+
+# Display the full menu
+food_system.display_menu()

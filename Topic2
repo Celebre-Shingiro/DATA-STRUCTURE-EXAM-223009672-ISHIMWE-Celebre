@@ -1,0 +1,84 @@
+class FoodDeliverySystem:
+    def __init__(self):
+        self.orders = []  # Simple array to store orders
+        self.order_id = 100
+
+    def place_order(self, customer_name, food_items, address):
+        # Create new order
+        self.order_id += 1
+        order = {
+            'order_id': self.order_id,
+            'customer': customer_name,
+            'items': food_items,
+            'address': address,
+            'status': 'Being prepared'
+        }
+        self.orders.append(order)
+        
+        print("\n=== Order Placed Successfully! ===")
+        print(f"Hi {customer_name}! Your order code is #{self.order_id}")
+        print(f"You ordered: {', '.join(food_items)}")
+        print("We'll deliver it to:", address)
+        print("=======================================")
+        return self.order_id
+
+    def track_order(self, order_id):
+        for order in self.orders:
+            if order['order_id'] == order_id:
+                print("\n===Order Status ===")
+                print(f"Order #{order_id}")
+                print(f"Customer: {order['customer']}")
+                print(f"Status: {order['status']}")
+                print("====================")
+                return
+        print(f"\nSorry! We couldn't find order #{order_id}")
+
+    def update_status(self, order_id, new_status):
+        for order in self.orders:
+            if order['order_id'] == order_id:
+                order['status'] = new_status
+                print(f"\nOrder #{order_id} is now: {new_status}")
+                return
+        print(f"\nSorry, We Couldn't find order #{order_id}")
+
+    def show_all_orders(self):
+        if not self.orders:
+            print("\nNo orders yet! ")
+            return
+            
+        print("\n=== Current Orders ===")
+        for order in self.orders:
+            print(f"Order #{order['order_id']} - {order['customer']}")
+            print(f"Items: {', '.join(order['items'])}")
+            print(f"Status: {order['status']}")
+            print("----------------------")
+
+
+def main():
+    print(" Welcome to Your Food Delivery System!")
+    
+    delivery = FoodDeliverySystem()
+    
+    order1 = delivery.place_order(
+        "Celebre",
+        ["Chips", "Coffee"],
+        "Huye-Mukoni"
+    )
+    
+    order2 = delivery.place_order(
+        "Prince",
+        ["Snacks", "soda", "potatoes"],
+        "Huye-Mukoni"
+    )
+    
+    # Track orders
+    delivery.track_order(order1)
+    
+    # Update an order
+    delivery.update_status(order1, "Out for delivery!")
+    
+    # Show all orders
+    delivery.show_all_orders()
+
+if __name__ == "__main__":
+    main()

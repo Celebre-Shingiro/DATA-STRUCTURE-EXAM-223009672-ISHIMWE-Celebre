@@ -1,0 +1,43 @@
+class FoodDeliverySystem:
+    def __init__(self):
+        self.orders = []  # List to store orders with their priority levels
+    
+    def add_order(self, order_id, priority_level):
+        # Add an order to the list (higher priority means more urgent)
+        self.orders.append((order_id, priority_level))
+        print(f"Added Order {order_id} with priority level {priority_level}.")
+        
+    
+    def bubble_sort_orders(self):
+        n = len(self.orders)
+        # Bubble Sort algorithm to sort orders based on priority level (descending order)
+        for i in range(n):
+            for j in range(0, n-i-1):
+                # If the current order's priority is less than the next order's priority, swap them
+                if self.orders[j][1] < self.orders[j+1][1]:
+                    # Swap the orders
+                    self.orders[j], self.orders[j+1] = self.orders[j+1], self.orders[j]
+                    print(f"Swapped Order {self.orders[j][0]} with Order {self.orders[j+1][0]}.")
+                
+    
+    def display_orders(self):
+        # Display the sorted orders
+        print("Orders sorted by priority:")
+        for order in self.orders:
+            print(f"Order {order[0]} with priority level {order[1]}")
+    
+
+# Example Usage
+food_system = FoodDeliverySystem()
+
+# Add orders with varying priority levels
+food_system.add_order("Order001", 5)  # High priority
+food_system.add_order("Order002", 2)  # Low priority
+food_system.add_order("Order003", 8)  # Very high priority
+food_system.add_order("Order004", 1)  # Very low priority
+
+# Sort orders based on priority using Bubble Sort
+food_system.bubble_sort_orders()
+
+# Display the sorted orders
+food_system.display_orders()

@@ -1,0 +1,66 @@
+import heapq
+
+class FoodDeliverySystem:
+    def __init__(self):
+        self.order_heap = []  # Max-heap to store orders with urgency and status
+    
+    def add_order(self, order_id, urgency_level, status="pending"):
+        # Add an order with urgency and status
+        heapq.heappush(self.order_heap, (-urgency_level, order_id, status))
+        print(f"Added Order {order_id} with urgency level {urgency_level} and status '{status}'.")
+    
+    def update_status(self, order_id, new_status):
+        # Update the status of a specific order
+        for i, (_, order, status) in enumerate(self.order_heap):
+            if order == order_id:
+                # Update the status of the order found
+                self.order_heap[i] = (-self.order_heap[i][0], order, new_status)
+                print(f"Updated Order {order_id} to status '{new_status}'.")
+                print("available orders:\n ----------------")
+                break
+        else:
+            print(f"Order {order_id} not found.")
+    
+    def display_orders(self):
+        # Display all orders with their status
+        if not self.order_heap:
+            print("No orders to display.")
+            return
+        print("Orders with Status:")
+        for urgency, order, status in self.order_heap:
+            print(f"Order {order} with urgency level {abs(urgency)} and status '{status}'")
+    
+    def process_order(self):
+        # Process the order with the highest urgency
+        if self.order_heap:
+            urgency, order_id, status = heapq.heappop(self.order_heap)
+            print(f"Processing Order {order_id} with urgency level {abs(urgency)}. Current status: '{status}'.")
+        else:
+            print("No orders to process.")
+    
+
+# Example Usage
+food_system = FoodDeliverySystem()
+
+# Add orders with urgency and status
+food_system.add_order("Order001", 5, "pending")
+food_system.add_order("Order002", 2, "pending")
+food_system.add_order("Order003", 8, "in-progress")
+print("available orders:\n ----------------")
+
+# Display all orders
+food_system.display_orders()
+
+# Update the status of an order
+food_system.update_status("Order002", "completed")
+
+# Display all orders after updating status
+food_system.display_orders()
+
+# Process the most urgent order
+
+food_system.process_order()
+
+# Display all orders after processing one
+print("available orders:\n ----------------")
+food_system.display_orders()

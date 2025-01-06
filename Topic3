@@ -1,0 +1,114 @@
+class CircularQueueDelivery:
+    def __init__(self, size):
+        self.size = size
+        self.queue = [None] * size
+        self.front = -1  # First order position
+        self.rear = -1   # Last order position
+        self.order_number = 100
+
+    def is_empty(self):
+        return self.front == -1 and self.rear == -1
+
+    def is_full(self):
+        return (self.rear + 1) % self.size == self.front
+
+    def add_order(self, customer_name, items, address):
+        if self.is_full():
+            print("\nSorry! Our delivery list is full right now.")
+            print("Please try again in a few minutes!")
+            return None
+        
+        self.order_number += 1
+        order = {
+            'order_number': self.order_number,
+            'customer': customer_name,
+            'items': items,
+            'address': address,
+            'status': 'Order received'
+        }
+
+        if self.is_empty():
+            self.front = self.rear = 0
+        else:
+            self.rear = (self.rear + 1) % self.size
+            
+        self.queue[self.rear] = order
+        
+        print("\nGreat news! Order added successfully!")
+        print(f"Customer: {customer_name}")
+        print(f"Items: {', '.join(items)}")
+        print(f"Delivery to: {address}")
+        print(f"Your order number is: #{self.order_number}\n======================")
+        
+        return self.order_number
+
+    def process_next_order(self):
+        if self.is_empty():
+            print("\nNo orders to process right now!")
+            return None
+
+        order = self.queue[self.front]
+        
+        print("\nProcessing order...")
+        print(f"Order #{order['order_number']} for {order['customer']}")
+        print(f"Items: {', '.join(order['items'])}")
+
+        # If this is the last order
+        if self.front == self.rear:
+            self.front = self.rear = -1
+        else:
+            self.front = (self.front + 1) % self.size
+            
+        return order
+
+    def display_all_orders(self):
+        if self.is_empty():
+            print("\nNo orders in the queue!")
+            return
+
+        print("\nCurrent Orders in Queue:")
+        print("-------------------------")
+        
+        i = self.front
+        while True:
+            order = self.queue[i]
+            print(f"Order #{order['order_number']} - {order['customer']}")
+            print(f"Items: {', '.join(order['items'])}")
+            print("-------------------------")
+            
+            if i == self.rear:
+                break
+            i = (i + 1) % self.size
+
+# Let's test our delivery system!
+def main():
+    print("Welcome to Your Food Delivery System!")
+    
+    # Create a delivery queue that can handle 5 orders at a time
+    delivery = CircularQueueDelivery(5)
+    
+    # Add some orders
+    order1 = delivery.add_order(
+        "Kevin", 
+        ["Chicken", "mutzing"], 
+        "Kigali-Gikondo"
+    )
+    
+    order2 = delivery.add_order(
+        "Celebre", 
+        ["Burger", "snacks", "Soda"], 
+        "Huye-Mukoni"
+    )
+    
+    # Show all orders
+    delivery.display_all_orders()
+    
+    # Process an order
+    delivery.process_next_order()
+    
+    # Show remaining orders
+    print("\nAfter processing one order:")
+    delivery.display_all_orders()
+
+if __name__ == "__main__":
+    main()

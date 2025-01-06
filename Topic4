@@ -1,0 +1,152 @@
+class Order:
+    def __init__(self, order_id, customer_name, items, address):
+        self.order_id = order_id
+        self.customer_name = customer_name
+        self.items = items
+        self.address = address
+        self.status = "Received"
+        self.next = None
+
+class DeliverySystem:
+    def __init__(self, max_orders):
+        self.head = None
+        self.max_orders = max_orders
+        self.current_orders = 0
+        self.order_id = 100
+        print(f"Delivery System started! We can handle {max_orders} orders at a time.")
+
+    def add_order(self, customer_name, items, address):
+        if self.current_orders >= self.max_orders:
+            print("\nSorry! We're at full capacity right now.")
+            print("Please try again once we complete some existing orders!\n-----------------")
+            return None
+
+        self.order_id += 1
+        new_order = Order(self.order_id, customer_name, items, address)
+        
+        # Add order to the end of the list
+        if not self.head:
+            self.head = new_order
+        else:
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = new_order
+        
+        self.current_orders += 1
+        
+        print("\nOrder placed successfully!")
+        print(f" Welcome, {customer_name}!")
+        print(f"Your order code is: #{self.order_id}")
+        print(f"Your ordered: {', '.join(items)}")
+        print(f"Delivery address: {address}")
+        
+        return self.order_id
+
+    def track_order(self, order_id):
+        current = self.head
+        while current:
+            if current.order_id == order_id:
+                print(f"\nFound your order #{order_id}!")
+                print(f"Customer: {current.customer_name}")
+                print(f"Status: {current.status}")
+                print(f"Items: {', '.join(current.items)}")
+                print(f"Delivery to: {current.address}")
+                print("\n-------------------------------")
+                return True
+            current = current.next
+        print(f"\nSorry, couldn't find order #{order_id}")
+        return False
+
+    def update_status(self, order_id, new_status):
+        current = self.head
+        while current:
+            if current.order_id == order_id:
+                current.status = new_status
+                print(f"\nOrder #{order_id} updated!")
+                print(f"New status: {new_status}")
+                print("\n-------------------------------")
+                return True
+            current = current.next
+        print(f"\nCouldn't find order #{order_id}")
+        return False
+
+    def complete_order(self, order_id):
+        if not self.head:
+            print("\nNo orders in the system!")
+            return False
+
+        # If it's the first order
+        if self.head.order_id == order_id:
+            self.head = self.head.next
+            self.current_orders -= 1
+            print(f"\nOrder #{order_id} completed!")
+            print("Thank you for choosing us!")
+            return True
+
+        # Check other positions
+        current = self.head
+        while current.next:
+            if current.next.order_id == order_id:
+                current.next = current.next.next
+                self.current_orders -= 1
+                print(f"\nOrder #{order_id} completed!")
+                print("Thank you for choosing us!")
+                return True
+            current = current.next
+
+        print(f"\nCouldn't find order #{order_id}")
+        return False
+
+    def display_all_orders(self):
+        if not self.head:
+            print("\nNo orders in the system right now!")
+            return
+
+        print("\nCurrent Orders:")
+        print("================")
+        current = self.head
+        while current:
+            print(f"Order #{current.order_id} - {current.customer_name}")
+            print(f"Status: {current.status}")
+            print(f"Items: {', '.join(current.items)}")
+            print("----------------")
+            current = current.next
+
+# Let's test our system!
+def main():
+    # Create delivery system that can handle 5 orders
+    delivery = DeliverySystem(5)
+
+    # Add some orders
+    order1 = delivery.add_order(
+        "Ngabo", 
+        ["chicken", "Cola"], 
+        "Kigali-Gikondo"
+    )
+    print("\n===================")
+
+    order2 = delivery.add_order(
+        "Celebre", 
+        ["Chicken", "Soda"], 
+        "Kigali-Nyamirambo"
+    )
+    print("\n===================")
+
+    # Track an order
+    delivery.track_order(order1)
+
+    # Update order status
+    delivery.update_status(order1, "Out for delivery!")
+
+    # Show all orders
+    delivery.display_all_orders()
+
+    # Complete an order
+    delivery.complete_order(order1)
+
+    # Show updated order list
+    delivery.display_all_orders()
+
+if __name__ == "__main__":
+    main()
