@@ -1,4 +1,4 @@
-# Data Structures in a Food Delivery System with Real-Time Tracking
+# Food Delivery System with Real-Time Tracking
 Here is the implementation of the system that allow Food Delivery with Real-Time Tracking.  
 ## How to Use
 1. Navigate to the topic you are interested in.
